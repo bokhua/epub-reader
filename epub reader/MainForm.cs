@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -54,7 +55,7 @@ namespace epub_reader
                 {
                     this.Text = epub.title + " - ePub Reader";
                     tocUrl = new Uri(String.Format("file:///{0}/toc.html", epub.extract));
-                    webBrowser.Url = new Uri(String.Format("file:///{0}/{1}", epub.extract, epub.links[0]));
+                    webBrowser.Url = new Uri(String.Format("file:///{0}", epub.links[0]));
                     tocBrowser.Navigate(tocUrl);
             
                 }
@@ -130,7 +131,7 @@ namespace epub_reader
             {
                 tocBrowser.Visible = true;
 
-                tocBrowser.Url = new Uri(String.Format("file:///{0}/toc.html", epub.extract));
+                tocBrowser.Url = new Uri(String.Format("{0}/toc.html", epub.extract));
       
              }
             else
@@ -182,11 +183,29 @@ namespace epub_reader
 
             if (keys.Contains(e.KeyCode))
                 e.IsInputKey = true;
-            if(e.KeyCode==)
+            
+            if (webBrowser.Document!=null && (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+            {
+                Console.WriteLine("current link: "+webBrowser.Url.ToString());
+                changeChapter(e.KeyCode);
+            }
         }
 
-        private void chapterChange(object sender, EventArgs e) 
+        private void changeChapter(Keys key)
         {
+            if (key == Keys.Left) 
+            {
+                int index = epub.links.IndexOf(Regex.Replace(webBrowser.Url.ToString(), "file:///", ""));
+                Console.WriteLine("links: "+index);
+                if (index>0)                 
+                    webBrowser.Navigate(epub.links[index-1]);           
+            }
+            else if (key == Keys.Right)
+            {
+                int index = epub.links.IndexOf(Regex.Replace(webBrowser.Url.ToString(), "file:///", ""));
+                if (index >= 0 && index<epub.links.Count()-1)
+                    webBrowser.Navigate(epub.links[index+1]);
+            }
         }
 
         private void lookToolStripMenuItem_Click(object sender, EventArgs e)

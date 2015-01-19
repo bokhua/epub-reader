@@ -25,7 +25,8 @@ namespace epub_reader
 
         public void load()
         {
-            extract = Path.GetTempPath() + "epub reader/"+Guid.NewGuid();
+            extract = Path.GetTempPath() + "epubreader/"+Guid.NewGuid();
+            extract = Regex.Replace(extract, @"\\", "/");
             Directory.CreateDirectory(extract);
             ZipFile.ExtractToDirectory(file, extract);
             
@@ -39,16 +40,23 @@ namespace epub_reader
             ns = root.GetDefaultNamespace();
             contentPath = extract+"/"+root.Descendants(ns + "rootfile").Attributes("full-path").First().Value;
 
-            Console.WriteLine("#############opf path: ", contentPath);
+            Console.WriteLine("######opf path: "+contentPath);
+            
             //get toc
-            tocPath = extract + @"/OEBPS/toc.ncx";
-            //tocClean = clean(File.ReadAllText(tocPath)).Split(';');
+            doc = XDocument.Load(contentPath);
+            root = doc.Root;
+            ns = root.GetDefaultNamespace();
+
+            IEnumerable<string> el =
+                from e in root.Descendants(ns + "item")
+                where e.Attribute("id").Value == "ncx"
+                select e.Attribute("href").Value;
+
+            tocPath = contentPath.Remove(contentPath.LastIndexOf("/") + 1) + el.First();
+            Console.WriteLine("######toc.ncx path: " + tocPath);
+            tocClean = clean(File.ReadAllText(tocPath)).Split(';');
             //if (tocClean != null)
             buildToc();
-
-            //get contents
-
-
         }
 
         public void close()
@@ -78,8 +86,10 @@ namespace epub_reader
             links = new List<string>();
             el = root.Descendants(ns + "content");
             foreach (XElement e in el)
-                links.Add(@"OEBPS/"+e.Attribute("src").Value);
-            
+            {
+                links.Add(tocPath.Remove(tocPath.LastIndexOf("/") + 1) + e.Attribute("src").Value);
+                Console.WriteLine(">>>>>link added:  " + tocPath.Remove(tocPath.LastIndexOf("/") + 1) + e.Attribute("src").Value);
+            }
             //get link descriptions
             descrip = new List<string>();
             el = root.Element(ns + "navMap").Descendants(ns + "text");
