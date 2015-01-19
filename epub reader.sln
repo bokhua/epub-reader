@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "epub reader", "epub reader\epub reader.csproj", "{10712793-464D-4A34-9152-FEE09B204828}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10712793-464D-4A34-9152-FEE09B204828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10712793-464D-4A34-9152-FEE09B204828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10712793-464D-4A34-9152-FEE09B204828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10712793-464D-4A34-9152-FEE09B204828}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
