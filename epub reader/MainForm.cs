@@ -131,7 +131,7 @@ namespace epub_reader
             {
                 tocBrowser.Visible = true;
 
-                tocBrowser.Url = new Uri(String.Format("{0}/toc.html", epub.extract));
+                tocBrowser.Url = new Uri(String.Format("file:///{0}/toc.html", epub.extract));
       
              }
             else
@@ -186,25 +186,28 @@ namespace epub_reader
             
             if (webBrowser.Document!=null && (e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
             {
-                Console.WriteLine("current link: "+webBrowser.Url.ToString());
+                
                 changeChapter(e.KeyCode);
             }
         }
 
         private void changeChapter(Keys key)
         {
+            string link = Regex.Replace(webBrowser.Url.ToString(), "file:///", "");
+            Console.WriteLine("current link: " + webBrowser.Url.ToString());
+            int index = epub.chapters.IndexOf(link);
+            
             if (key == Keys.Left) 
             {
-                int index = epub.links.IndexOf(Regex.Replace(webBrowser.Url.ToString(), "file:///", ""));
-                Console.WriteLine("links: "+index);
+                Console.WriteLine("links left: " + epub.chapters[epub.chapters.Count() - 1]);
                 if (index>0)                 
-                    webBrowser.Navigate(epub.links[index-1]);           
+                    webBrowser.Navigate(epub.chapters[index-1]);           
             }
             else if (key == Keys.Right)
             {
-                int index = epub.links.IndexOf(Regex.Replace(webBrowser.Url.ToString(), "file:///", ""));
-                if (index >= 0 && index<epub.links.Count()-1)
-                    webBrowser.Navigate(epub.links[index+1]);
+                Console.WriteLine("links right: " + epub.chapters[epub.chapters.Count()-1]);
+                if (index >= 0 && index<epub.chapters.Count()-1)
+                    webBrowser.Navigate(epub.chapters[index+1]);
             }
         }
 
@@ -219,6 +222,4 @@ namespace epub_reader
         }
 
     }
-
-   
 }

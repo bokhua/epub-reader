@@ -14,7 +14,7 @@ namespace epub_reader
     {
 
         public string toc, tocPath,file, extract, contentPath, title;
-        public List<string> links, descrip;
+        public List<string> links, descrip, chapters;
         public List<List<String>> nav;
        
         public string[] tocClean;
@@ -74,6 +74,7 @@ namespace epub_reader
 
         private void buildToc() 
         {
+            Console.WriteLine(">>>>>>>>start building toc");
             XDocument doc = XDocument.Load(tocPath);
             XElement root = doc.Root;
             XNamespace ns = root.Attribute("xmlns").Value;
@@ -84,11 +85,22 @@ namespace epub_reader
 
             //get links
             links = new List<string>();
+            chapters = new List<string>();
             el = root.Descendants(ns + "content");
             foreach (XElement e in el)
             {
-                links.Add(tocPath.Remove(tocPath.LastIndexOf("/") + 1) + e.Attribute("src").Value);
-                Console.WriteLine(">>>>>link added:  " + tocPath.Remove(tocPath.LastIndexOf("/") + 1) + e.Attribute("src").Value);
+                string link = tocPath.Remove(tocPath.LastIndexOf("/") + 1) + e.Attribute("src").Value;
+                links.Add(link);
+                if (link.Contains("#")) 
+                {
+                    link = link.Remove(link.IndexOf("#"));
+                    if (chapters.Last() != link)
+                        chapters.Add(link);
+                }
+                else
+                    chapters.Add(link);
+                
+                Console.WriteLine(">>>>>link added:  " + link);
             }
             //get link descriptions
             descrip = new List<string>();
@@ -145,13 +157,6 @@ namespace epub_reader
                writer.WriteLine("<dl/>{0}</body>{0}</html>",br);
                writer.Close();
             }
-            /*
-            toc += String.Format(@"<h style='color:green'>{0}</h>",tocClean[0]);
-            for (int i = 1; i < tocClean.Length; i++)
-            {
-                toc += String.Format(@"<p>{0}</p>",tocClean[i]);
-            }
-             * */
         }
     }
 }
