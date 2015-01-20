@@ -96,6 +96,11 @@ namespace epub_reader
             Console.WriteLine("position: x={0}, y={1}", x,y);
             return new int[]{x,y};
         }
+        private void scrollToTop(object sender, WebBrowserDocumentCompletedEventArgs e) 
+        {
+            webBrowser.Document.Window.ScrollTo(0,0);
+            webBrowser.Visible = true;
+        }
         private void scrollToID(object sender, WebBrowserDocumentCompletedEventArgs e, string id) 
         {
             if (id != null)
@@ -112,7 +117,7 @@ namespace epub_reader
 
         private void webBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            webBrowser.ContextMenuStrip = webContextMenuStrip;
+
         }
 
         private void render(object sender, EventArgs e)
@@ -156,13 +161,18 @@ namespace epub_reader
                 Console.WriteLine("link clicked: "+s);
                 if (s.Contains("%23"))
                 {
-                    string[] link = s.Split(new string[]{"%23"}, StringSplitOptions.None);
+                    string[] link = s.Split(new string[] { "%23" }, StringSplitOptions.None);
                     webBrowser.Navigate(link[0]);
                     webBrowser.DocumentCompleted +=
                         new WebBrowserDocumentCompletedEventHandler((send, eve) => scrollToID(send, eve, link[1]));
                 }
                 else
+                {
                     webBrowser.Url = e.Url;
+                    webBrowser.DocumentCompleted +=
+                        new WebBrowserDocumentCompletedEventHandler((send, eve) => scrollToTop(send, eve));
+    
+                }
             }
         }
 
@@ -179,7 +189,7 @@ namespace epub_reader
 
         private void web_KeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            List<Keys> keys = new List<Keys>(){Keys.Up, Keys.Down, Keys.Left, Keys.Right, Keys.PageDown, Keys.PageUp};
+            List<Keys> keys = new List<Keys>(){Keys.Up, Keys.Down, Keys.PageDown, Keys.PageUp};
 
             if (keys.Contains(e.KeyCode))
                 e.IsInputKey = true;
@@ -200,14 +210,26 @@ namespace epub_reader
             if (key == Keys.Left) 
             {
                 Console.WriteLine("links left: " + epub.chapters[epub.chapters.Count() - 1]);
-                if (index>0)                 
-                    webBrowser.Navigate(epub.chapters[index-1]);           
+                if (index > 0)
+                {
+                    Console.WriteLine("@@@@@@@@  next chapter: " + epub.chapters[index - 1]);
+                    webBrowser.Navigate(epub.chapters[index - 1]);
+                    webBrowser.DocumentCompleted +=
+                        new WebBrowserDocumentCompletedEventHandler((send, eve) => scrollToTop(send, eve));
+                
+                }
             }
             else if (key == Keys.Right)
             {
                 Console.WriteLine("links right: " + epub.chapters[epub.chapters.Count()-1]);
-                if (index >= 0 && index<epub.chapters.Count()-1)
-                    webBrowser.Navigate(epub.chapters[index+1]);
+                if (index >= 0 && index < epub.chapters.Count() - 1)
+                {
+                    webBrowser.Navigate(epub.chapters[index + 1]);
+                    Console.WriteLine("@@@@@@@@  next chapter: " + epub.chapters[index + 1]);
+                    webBrowser.DocumentCompleted +=
+                         new WebBrowserDocumentCompletedEventHandler((send, eve) => scrollToTop(send, eve));
+    
+                }
             }
         }
 
@@ -216,10 +238,6 @@ namespace epub_reader
 
         }
 
-        private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
-        {
-            webBrowser.ContextMenuStrip = webContextMenuStrip; 
-        }
 
     }
 }

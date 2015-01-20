@@ -94,7 +94,7 @@ namespace epub_reader
                 if (link.Contains("#")) 
                 {
                     link = link.Remove(link.IndexOf("#"));
-                    if (chapters.Last() != link)
+                    if (!chapters.Contains(link))
                         chapters.Add(link);
                 }
                 else

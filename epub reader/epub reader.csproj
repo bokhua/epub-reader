@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dictionary.cs" />
     <Compile Include="Epub.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.menu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,11 +37,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.tocBrowser = new System.Windows.Forms.WebBrowser();
-            this.webContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextMenu_copy = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenu_look = new System.Windows.Forms.ToolStripMenuItem();
             this.menu.SuspendLayout();
-            this.webContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menu
@@ -108,7 +103,6 @@
             // 
             // webBrowser
             // 
-            this.webBrowser.ContextMenuStrip = this.webContextMenuStrip;
             this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webBrowser.Location = new System.Drawing.Point(500, 33);
             this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
@@ -132,28 +126,6 @@
             this.tocBrowser.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.tocLink_Click);
             this.tocBrowser.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.web_KeyDown);
             // 
-            // webContextMenuStrip
-            // 
-            this.webContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contextMenu_copy,
-            this.contextMenu_look});
-            this.webContextMenuStrip.Name = "contextMenuStrip";
-            this.webContextMenuStrip.Size = new System.Drawing.Size(252, 64);
-            this.webContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
-            // 
-            // contextMenu_copy
-            // 
-            this.contextMenu_copy.Name = "contextMenu_copy";
-            this.contextMenu_copy.Size = new System.Drawing.Size(251, 30);
-            this.contextMenu_copy.Text = "Copy";
-            // 
-            // contextMenu_look
-            // 
-            this.contextMenu_look.Name = "contextMenu_look";
-            this.contextMenu_look.Size = new System.Drawing.Size(251, 30);
-            this.contextMenu_look.Text = "Look up in dictionary";
-            this.contextMenu_look.Click += new System.EventHandler(this.lookToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -173,7 +145,6 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menu.ResumeLayout(false);
             this.menu.PerformLayout();
-            this.webContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -190,9 +161,6 @@
         private System.Windows.Forms.ToolStripMenuItem contentToolStripMenuItem;
         private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.WebBrowser tocBrowser;
-        private System.Windows.Forms.ContextMenuStrip webContextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem contextMenu_copy;
-        private System.Windows.Forms.ToolStripMenuItem contextMenu_look;
 
 
     }
